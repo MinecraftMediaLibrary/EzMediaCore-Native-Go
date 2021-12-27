@@ -1,5 +1,3 @@
-module ezmediacore-native-go
+module github.com/MinecraftMediaLibrary/EzMediaCore-Native-Go
 
 go 1.17
-
-replace /ezmediacore-native-go => /github.com/MinecraftMediaLibrary/EzMediaCore-Native-Go
