@@ -2,11 +2,11 @@ package dither
 
 import (
 	"C"
-	"ezmediacore-native-go/main/dither/utils"
+	"ezmediacore-native-go/ezmediacore-native-go/dither/utils"
 	"unsafe"
 )
 
-func floydSteinbergDither(
+func filterLiteDither(
 	colors []int,
 	fullColors []byte,
 	buffer []int,
@@ -29,7 +29,6 @@ func floydSteinbergDither(
 			var buf1 = ditherBuffer[0]
 			var buf2 = ditherBuffer[1]
 			for x := 0; x < width; x++ {
-				var hasNextX = x < widthMinus
 				var index = yIndex + x
 				var rgb = buffer[index]
 				var red = rgb >> 16 & 0xFF
@@ -45,25 +44,21 @@ func floydSteinbergDither(
 				var deltaG = green - (closest >> 8 & 0xFF)
 				var deltaB = blue - (closest & 0xFF)
 
-				if hasNextX {
-					buf1[bufferIndex] = int(0.4375 * float32(deltaR))
-					buf1[bufferIndex+1] = int(0.4375 * float32(deltaG))
-					buf1[bufferIndex+2] = int(0.4375 * float32(deltaB))
+				if x < widthMinus {
+					buf1[bufferIndex] = deltaR >> 1
+					buf1[bufferIndex+1] = deltaG >> 1
+					buf1[bufferIndex+2] = deltaB >> 1
 				}
+
 				if hasNextY {
 					if x > 0 {
-						buf2[bufferIndex-6] = int(0.1875 * float32(deltaR))
-						buf2[bufferIndex-5] = int(0.1875 * float32(deltaG))
-						buf2[bufferIndex-4] = int(0.1875 * float32(deltaB))
+						buf2[bufferIndex-6] = deltaR >> 2
+						buf2[bufferIndex-5] = deltaG >> 2
+						buf2[bufferIndex-4] = deltaB >> 2
 					}
-					buf2[bufferIndex-3] = int(0.3125 * float32(deltaR))
-					buf2[bufferIndex-2] = int(0.3125 * float32(deltaG))
-					buf2[bufferIndex-1] = int(0.3125 * float32(deltaB))
-					if hasNextX {
-						buf2[bufferIndex] = int(0.0625 * float32(deltaR))
-						buf2[bufferIndex+1] = int(0.0625 * float32(deltaG))
-						buf2[bufferIndex+2] = int(0.0625 * float32(deltaB))
-					}
+					buf2[bufferIndex-3] = deltaR >> 2
+					buf2[bufferIndex-2] = deltaG >> 2
+					buf2[bufferIndex-1] = deltaB >> 2
 				}
 
 				data[index] = utils.GetBestColorRGB(fullColors, closest)
@@ -73,7 +68,6 @@ func floydSteinbergDither(
 			var buf1 = ditherBuffer[1]
 			var buf2 = ditherBuffer[0]
 			for x := width - 1; x >= 0; x-- {
-				var hasNextX = x > 0
 				var index = yIndex + x
 				var rgb = buffer[index]
 				var red = rgb >> 16 & 0xFF
@@ -89,27 +83,22 @@ func floydSteinbergDither(
 				var deltaG = green - (closest >> 8 & 0xFF)
 				var deltaB = blue - (closest & 0xFF)
 
-				if hasNextX {
-					buf1[bufferIndex] = int(0.4375 * float32(deltaR))
-					buf1[bufferIndex-1] = int(0.4375 * float32(deltaG))
-					buf1[bufferIndex-2] = int(0.4375 * float32(deltaB))
-				}
-				if hasNextY {
-					if x > 0 {
-						buf2[bufferIndex+6] = int(0.1875 * float32(deltaR))
-						buf2[bufferIndex+5] = int(0.1875 * float32(deltaG))
-						buf2[bufferIndex+4] = int(0.1875 * float32(deltaB))
-					}
-					buf2[bufferIndex+3] = int(0.3125 * float32(deltaR))
-					buf2[bufferIndex+2] = int(0.3125 * float32(deltaG))
-					buf2[bufferIndex+1] = int(0.3125 * float32(deltaB))
-					if hasNextX {
-						buf2[bufferIndex] = int(0.0625 * float32(deltaR))
-						buf2[bufferIndex-1] = int(0.0625 * float32(deltaG))
-						buf2[bufferIndex-2] = int(0.0625 * float32(deltaB))
-					}
+				if x > 0 {
+					buf1[bufferIndex] = deltaB >> 1
+					buf1[bufferIndex-1] = deltaG >> 1
+					buf1[bufferIndex-2] = deltaR >> 1
 				}
 
+				if hasNextY {
+					if x < widthMinus {
+						buf2[bufferIndex+6] = deltaB >> 2
+						buf2[bufferIndex+5] = deltaG >> 2
+						buf2[bufferIndex+4] = deltaR >> 2
+					}
+					buf2[bufferIndex+3] = deltaB >> 2
+					buf2[bufferIndex+2] = deltaG >> 2
+					buf2[bufferIndex+1] = deltaR >> 2
+				}
 				data[index] = utils.GetBestColorRGB(fullColors, closest)
 			}
 		}

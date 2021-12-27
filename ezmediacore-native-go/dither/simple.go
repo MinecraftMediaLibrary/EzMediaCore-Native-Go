@@ -2,7 +2,7 @@ package dither
 
 import (
 	"C"
-	"ezmediacore-native-go/main/dither/utils"
+	"ezmediacore-native-go/ezmediacore-native-go/dither/utils"
 	"unsafe"
 )
 
