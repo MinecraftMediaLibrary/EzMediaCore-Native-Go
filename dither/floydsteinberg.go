@@ -2,7 +2,7 @@ package dither
 
 import (
 	"C"
-	"ezmediacore-native-go/dither/utils"
+	"github.com/MinecraftMediaLibrary/EzMediaCore-Native-Go/dither/utils"
 	"unsafe"
 )
 
