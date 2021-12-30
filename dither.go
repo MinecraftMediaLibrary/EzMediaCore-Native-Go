@@ -271,19 +271,15 @@ func simpleDither(
 }
 
 func calculateIncrementalPixel(bufferIndex int, color int, buf1 []int) (int, int) {
-	bufferIndex++
-	return calculatePixel(bufferIndex, color, buf1)
+	color += buf1[bufferIndex]
+	color = correctPixel(color)
+	return bufferIndex + 1, color
 }
 
 func calculateDecrementalPixel(bufferIndex int, color int, buf1 []int) (int, int) {
-	bufferIndex--
-	return calculatePixel(bufferIndex, color, buf1)
-}
-
-func calculatePixel(bufferIndex int, color int, buf1 []int) (int, int) {
 	color += buf1[bufferIndex]
 	color = correctPixel(color)
-	return bufferIndex, color
+	return bufferIndex - 1, color
 }
 
 func correctPixel(color int) int {
