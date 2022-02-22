@@ -68,10 +68,10 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
-extern void* filterLiteDither(GoSlice colors, GoSlice fullColors, GoSlice buffer, GoInt width);
-extern void* floydSteinbergDither(GoSlice colors, GoSlice fullColors, GoSlice buffer, GoInt width);
-extern void* randomDither(GoSlice colors, GoSlice fullColors, GoSlice buffer, GoInt width, GoInt weight);
-extern void* simpleDither(GoSlice colors, GoSlice fullColors, GoSlice buffer, GoInt width);
+extern __declspec(dllexport) void* filterLiteDither(GoSlice colors, GoSlice fullColors, GoSlice buffer, GoInt width);
+extern __declspec(dllexport) void* floydSteinbergDither(GoSlice colors, GoSlice fullColors, GoSlice buffer, GoInt width);
+extern __declspec(dllexport) void* randomDither(GoSlice colors, GoSlice fullColors, GoSlice buffer, GoInt width, GoInt weight);
+extern __declspec(dllexport) void* simpleDither(GoSlice colors, GoSlice fullColors, GoSlice buffer, GoInt width);
 
 #ifdef __cplusplus
 }
