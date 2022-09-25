@@ -1,3 +1,3 @@
 module github.com/MinecraftMediaLibrary/EzMediaCore-Native-Go
 
-go 1.17
+go 1.19
